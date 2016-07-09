@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework_swagger',
     'rest_framework.authtoken',
+    'djcelery',
     'api',
 ]
 
@@ -58,7 +59,7 @@ ROOT_URLCONF = 'celery_demo.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(os.path.dirname(__file__), 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -148,3 +149,22 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
 
 STATIC_URL = '/static/'
+
+# TEMPLATES = {
+#     'TEMPLATE_DIRS': (
+#         os.path.join(os.path.dirname(__file__), 'templates'),
+#     )
+# }
+# celery setup
+import djcelery
+djcelery.setup_loader()
+BROKER_URL = 'amqp://myuser:mypassword@127.0.0.1:5672//'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_IMPORTS = ('api.tasks',)
+
+try:
+    from settings_local import *
+except ImportError:
+    pass

@@ -1,0 +1,42 @@
+1. Install Rabbitmq as a broker `sudo apt-get install rabbitmq-server`
+
+2. Add new user in rabbitmq `sudo rabbitmqctl add_user myuser mypassword`
+
+3. Change permission for rabbitmq user `sudo rabbitmqctl set_permissions -p / myuser ".*" ".*" ".*"`
+
+4. Add celery configuration in settings.py
+
+    import djcelery
+    djcelery.setup_loader()
+    BROKER_URL = 'amqp://myuser:mypassword@127.0.0.1:5672//'
+    CELERY_ACCEPT_CONTENT = ['json']
+    CELERY_TASK_SERIALIZER = 'json'
+    CELERY_RESULT_SERIALIZER = 'json'
+    CELERY_IMPORTS = ('api.tasks',)
+
+5.  pip install django-celery
+
+6.  add 'djcelery' in to INSTALLED_APPS in settings.py
+
+7.  create tables for celery to save async tasks. run `python manage.py migrate`
+
+8. Create tasks.py file. Which will contain all the async tasks as functions.
+
+    make sure to import `from celery.task import task` in tasks.py file. so `@task` decorator can be applied to
+    all the functions.
+
+    example :
+        @task(name='api.tasks.user_welcome_mail')
+        def user_welcome_mail(user_id):
+            ...
+            ...
+
+9. Run celery. ` python manage.py celery worker --loglevel=INFO`
+
+10. Install flower to monitor async tasks. `pip install flower`
+
+11. Run flower. `celery flower --broker=<RABBITMQ_URL> -persistent=<true/false>`
+
+12. Visit 'localhost:5555'
+
+

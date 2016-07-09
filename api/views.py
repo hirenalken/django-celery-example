@@ -1,4 +1,4 @@
-
+from api import tasks
 from django.shortcuts import render
 
 # Create your views here.
@@ -17,7 +17,6 @@ class UsersList(mixins.ListModelMixin,
                 generics.GenericAPIView):
     serializer_class = UserSerializer
 
-
     def get_queryset(self):
         return User.objects.all()
 
@@ -30,6 +29,8 @@ class UsersList(mixins.ListModelMixin,
             user.save()
         data = serializer.data
         data["token"] = token
+        # Async Task
+        tasks.user_welcome_mail.delay(user.id)
         return Response(data, status=status.HTTP_201_CREATED)
 
     def get(self, request, *args, **kwargs):
