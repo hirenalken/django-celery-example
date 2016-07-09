@@ -7,4 +7,3 @@ venv
 .idea/
 settings_local.py
 flower
-api/tasks.py
