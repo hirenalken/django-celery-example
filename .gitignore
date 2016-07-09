@@ -5,4 +5,6 @@ db.sqlite3
 *.pyc
 venv
 .idea/
-
+settings_local.py
+flower
+api/tasks.py
