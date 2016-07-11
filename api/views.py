@@ -63,7 +63,7 @@ class PostList(mixins.ListModelMixin,
     # permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Post.objects.all()
+        return Post.objects.select_related('user').prefetch_related('comment_set').all()
 
     def get(self, request, *args, **kwargs):
         self.serializer_class = PostDetailSerializer
