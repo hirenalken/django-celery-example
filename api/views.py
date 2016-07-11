@@ -6,7 +6,7 @@ from rest_framework import mixins
 from rest_framework import generics
 
 from api.models import User, Comment, Post
-from api.serializers import UserSerializer, CommentSerializer, PostSerializer, PostGetSerializer
+from api.serializers import UserSerializer, CommentSerializer, PostSerializer, PostGetSerializer, PostDetailSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework import status
@@ -60,13 +60,13 @@ class PostList(mixins.ListModelMixin,
                generics.GenericAPIView):
 
     serializer_class = PostSerializer
-    permission_classes = (IsAuthenticated,)
+    # permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
         return Post.objects.all()
 
     def get(self, request, *args, **kwargs):
-        self.serializer_class = PostGetSerializer
+        self.serializer_class = PostDetailSerializer
         return self.list(request, *args, **kwargs)
 
     def post(self, request, *args, **kwargs):

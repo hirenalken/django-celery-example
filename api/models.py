@@ -101,7 +101,7 @@ class Comment(models.Model):
     class Meta:
         db_table = 'comments'
 
-    text = models.CharField(max_length=200, null=True)
+    c_text = models.CharField(max_length=200, null=True)
     post = models.ForeignKey(Post)
     user = models.ForeignKey(User)
     created = models.DateTimeField(auto_now_add=True)

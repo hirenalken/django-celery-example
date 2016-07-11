@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/1.9/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/1.9/ref/settings/
 """
+import logging
 
 import os
 
@@ -52,6 +53,7 @@ MIDDLEWARE_CLASSES = [
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'api.custom_middleware.SQLLogMiddleware',
 ]
 
 ROOT_URLCONF = 'celery_demo.urls'
@@ -163,6 +165,19 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_IMPORTS = ('api.tasks',)
+
+
+# Logging setting
+MOATHER_LOG_FILE = os.path.join(BASE_DIR, "celery_demo.log")
+
+# creating a format for log messages
+FORMAT = '%(asctime)s %(levelname)s %(message)s'
+
+
+logging.basicConfig(format=FORMAT,
+                    filename=MOATHER_LOG_FILE,
+                    level=logging.INFO)
+LOG = logging.getLogger('celery_demo')
 
 try:
     from settings_local import *

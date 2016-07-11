@@ -7,3 +7,4 @@ venv
 .idea/
 settings_local.py
 flower
+celery_demo.log

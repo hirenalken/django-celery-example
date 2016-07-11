@@ -37,4 +37,29 @@ class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         db_table = 'comments'
         model = Comment
-        fields = ('id', 'post', 'text', 'user')
+        fields = ('id', 'post', 'c_text', 'user')
+
+
+class PostDetailSerializer(serializers.Serializer):
+    def update(self, instance, validated_data):
+        pass
+
+    def create(self, validated_data):
+        pass
+
+    id = serializers.IntegerField()
+    title = serializers.CharField()
+    text = serializers.CharField()
+
+    user = UserInfoSerializer()
+    comment = serializers.SerializerMethodField()
+
+    def get_comment(self, instance):
+        try:
+            if instance.comment_set.all().exists():
+                return CommentSerializer(instance.comment_set.all()[0]).data
+            else:
+                return None
+        except Comment.DoesNotExist:
+            return None
+
