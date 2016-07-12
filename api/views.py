@@ -1,4 +1,5 @@
 from api import tasks
+from django.db.models.query import Prefetch
 from django.shortcuts import render
 
 # Create your views here.
@@ -63,7 +64,10 @@ class PostList(mixins.ListModelMixin,
     # permission_classes = (IsAuthenticated,)
 
     def get_queryset(self):
-        return Post.objects.select_related('user').prefetch_related('comment_set').all()
+        return Post.objects.select_related('user').prefetch_related('comment_set')
+        # return Post.objects.select_related('user').prefetch_related(
+        #     Prefetch('comment_set', queryset=Comment.objects.select_related('user'))
+        # )
 
     def get(self, request, *args, **kwargs):
         self.serializer_class = PostDetailSerializer
@@ -121,3 +125,14 @@ class CommentDetail(mixins.RetrieveModelMixin,
 
     def put(self, request, *args, **kwargs):
         return self.update(request, *args, **kwargs)
+
+
+def index(request):
+    # posts = Post.objects.order_by('-created')[:50]
+    # posts = Post.objects.select_related('user').prefetch_related('comment_set')
+    posts = Post.objects.select_related('user').prefetch_related(
+            Prefetch('comment_set', queryset=Comment.objects.select_related('user'))
+        )
+
+    context = {'posts': posts[:50]}
+    return render(request, 'posts.html', context)

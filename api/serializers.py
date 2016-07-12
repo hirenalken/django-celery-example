@@ -34,10 +34,18 @@ class PostGetSerializer(serializers.ModelSerializer):
 
 
 class CommentSerializer(serializers.ModelSerializer):
+    user = UserInfoSerializer()
+
     class Meta:
         db_table = 'comments'
         model = Comment
         fields = ('id', 'post', 'c_text', 'user')
+
+    @staticmethod
+    def setup_eager_loading(queryset):
+        """ Perform necessary eager loading of data. """
+        queryset = queryset.select_related('user')
+        return queryset
 
 
 class PostDetailSerializer(serializers.Serializer):
@@ -52,14 +60,9 @@ class PostDetailSerializer(serializers.Serializer):
     text = serializers.CharField()
 
     user = UserInfoSerializer()
-    comment = serializers.SerializerMethodField()
+    # comment = serializers.SerializerMethodField()
+    comment = CommentSerializer(read_only=True, source="comment_set", many=True)
 
-    def get_comment(self, instance):
-        try:
-            if instance.comment_set.all().exists():
-                return CommentSerializer(instance.comment_set.all()[0]).data
-            else:
-                return None
-        except Comment.DoesNotExist:
-            return None
+
+
 

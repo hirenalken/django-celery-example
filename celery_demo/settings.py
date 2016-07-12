@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'rest_framework_swagger',
     'rest_framework.authtoken',
     'djcelery',
+    'debug_toolbar',
     'api',
 ]
 
