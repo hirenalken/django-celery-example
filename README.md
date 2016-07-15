@@ -1,4 +1,4 @@
-# celery_demo
+# Django Examples
 Repository contains basic example of how to use `django-celery` to run Async task. It is a basic posts application which also includes good example of how to use mixins. 
 
 * Send email on User registration using rabbitmq and django-celery.
