@@ -7,6 +7,16 @@ Repository contains basic example of how to use `django-celery` to run Async tas
 * Create get,post,put API quickly with model mixins.
 * example for Class based paginatinos. 
 
+Setup steps:
+
+* Create virtualenv : `virtualenv venv`
+* Activate virtualenv : `source venv/bin/activate`
+* install required packages :`sudo apt-get install postgresql postgresql-contrib postgresql-client python-dev libpq-dev python-psycopg2 git python-virtualenv`
+* `pip install -r requirements.txt`
+* Install postgres and create database named `posts_app`
+* migrate : `python manage.py migrate`
+* `python manage.py runserver`
+
 please consider adding `settings_local.py` in your local when you clone this repo. add following settings to setup Email functionality.
 
     EMAIL_USE_TLS = True
